@@ -62,7 +62,7 @@ def main():
         {"question": "Where did we first meet?", "choices": ["Dream", "Cafe", "2 no. gate", "Your garage"], "correct_answer": "Cafe"},
         {"question": "What do you think, I would choose as your favorite movie from the options below?", "choices": ["Tangled", "Howls Moving Castle", "Whisper of the Heart", "From up on poppy hill"], "correct_answer": "Tangled"},
         {"question": "What's your dream vacation destination, I would choose?", "choices": ["Maldives", "Okinawa", "Bali", "Malaysia"], "correct_answer": "Bali"},
-        {"question": "What our favorite hobby?", "choices": ["Reading", "Cooking", "Talking", "Laying down doing nothing"], "correct_answer": "Talking"},
+        {"question": "What's our favorite hobby?", "choices": ["Reading", "Cooking", "Talking", "Laying down doing nothing"], "correct_answer": "Talking"},
         {"question": "Which animal I would bring home that you would love?", "choices": ["Dog", "Cat", "Hamster", "Tiger"], "correct_answer": "Cat"},
         {"question": "What's our favorite season?", "choices": ["Winter", "Spring", "Summer", "Autumn"], "correct_answer": "Spring"},
         {"question": "What type of music do I think, you like?", "choices": ["Pop", "Rock", "Classical", "Indie"], "correct_answer": "Indie"},
