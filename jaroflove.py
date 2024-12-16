@@ -14,12 +14,12 @@ import matplotlib.patches as patches
 # Function to display and animate the "cylinder" filling
 def animate_cylinder(correct_answers, total_questions):
     # Define cylinder dimensions
-    cylinder_width = 2  # Width of the cylinder
-    cylinder_height = 4  # Height of the cylinder
+    cylinder_width = 1  # Width of the cylinder
+    cylinder_height = 2  # Height of the cylinder
     fill_height = (correct_answers / total_questions) * cylinder_height  # Calculate fill height
 
     # Create a figure and axis for the cylinder
-    fig, ax = plt.subplots(figsize=(2, 4))
+    fig, ax = plt.subplots(figsize=(1, 2))
 
     # Draw the cylinder (as a rectangle)
     ax.add_patch(patches.Rectangle((0, 0), cylinder_width, cylinder_height, linewidth=2, edgecolor='black', facecolor='lightgray'))
