@@ -10,49 +10,59 @@ Original file is located at
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import time
 
-# Function to display the cylinder
-def display_cylinder(fill_height, is_final=False):
+# Function to display and animate the "cylinder" filling
+def display_cylinder(fill_height):
     # Define cylinder dimensions
-    cylinder_width = 2
-    cylinder_height = 4
+    cylinder_width = 2  # Width of the cylinder
+    cylinder_height = 4  # Height of the cylinder
 
     # Create a figure and axis for the cylinder
     fig, ax = plt.subplots(figsize=(6, 8))
 
-    # Draw the cylinder (outer boundary)
-    ax.add_patch(
-        patches.Rectangle(
-            (0, 0), cylinder_width, cylinder_height, linewidth=2, edgecolor="black", facecolor="lightgray"
-        )
-    )
+    # Draw the cylinder (as a rectangle)
+    ax.add_patch(patches.Rectangle((0, 0), cylinder_width, cylinder_height, linewidth=2, edgecolor='black', facecolor='lightgray'))
 
-    # Draw the filled part of the cylinder
-    ax.add_patch(
-        patches.Rectangle(
-            (0, 0), cylinder_width, fill_height, linewidth=0, edgecolor="black", facecolor="red"
-        )
-    )
+    # Draw the filled part of the cylinder (in red)
+    ax.add_patch(patches.Rectangle((0, 0), cylinder_width, fill_height, linewidth=0, edgecolor='black', facecolor='red'))
 
     # Set the limits of the plot to match the cylinder size
     ax.set_xlim(0, cylinder_width)
     ax.set_ylim(0, cylinder_height)
 
     # Remove axes for a cleaner look
-    ax.axis("off")
+    ax.axis('off')
 
-    # Display the plot
-    if is_final:
-        st.write("Final Cylinder:")
-    st.pyplot(fig)
+    # Return the figure
+    return fig
 
-# Function to handle the quiz logic
-def ask_question(question, choices, correct_answer, question_index, correct_answers):
-    st.write(question)
-    user_choice = st.radio("Choose an answer:", choices, key=f"question_{question_index}")
-    return user_choice
+# Function to animate the cylinder gradually to 100%
+def slowly_fill_cylinder(start_fill_height):
+    target_fill_height = 4  # 100% fill corresponds to the cylinder height of 4
+    increment = 0.1  # Small increments for smooth animation
 
-# Function for the final message and full cylinder display
+    # Create a placeholder for the animation
+    cylinder_placeholder = st.empty()
+
+    # Gradually increase the fill height
+    current_fill_height = start_fill_height
+    while current_fill_height < target_fill_height:
+        # Render the cylinder with the current fill height
+        fig = display_cylinder(current_fill_height)
+        cylinder_placeholder.pyplot(fig)
+
+        # Increment the fill height
+        current_fill_height += increment
+
+        # Pause briefly to create animation effect
+        time.sleep(0.1)
+
+    # Ensure the final frame shows a fully filled cylinder
+    fig = display_cylinder(target_fill_height)
+    cylinder_placeholder.pyplot(fig)
+
+# Function for final message
 def final_message(correct_answers, total_questions):
     if correct_answers == total_questions:
         st.write("The cylinder is full of love!")
@@ -62,9 +72,9 @@ def final_message(correct_answers, total_questions):
         st.write("The cylinder is not full of love!")
         st.write(f"You answered {correct_answers}/{total_questions} correctly.")
         st.write("But no matter what, you are always right. <3")
-
-    # Display the 100% full cylinder
-    display_cylinder(4, is_final=True)
+        # Trigger the slow fill animation
+        start_fill_height = (correct_answers / total_questions) * 4
+        slowly_fill_cylinder(start_fill_height)
 
 # Main app logic
 def main():
@@ -81,8 +91,8 @@ def main():
         {"question": "What type of music do I think, you like?", "choices": ["Pop", "Rock", "Classical", "Indie"], "correct_answer": "Indie"},
         {"question": "What do you think, I would choose as your favorite movie from the options below?", "choices": ["The Notebook", "Little Women", "Shrek", "Pride and Prejudice"], "correct_answer": "Little Women"},
     ]
-
-    # Initialize session state to track the current question and correct answers
+    
+    # Initialize session state to track the current question and the number of correct answers
     if "question_index" not in st.session_state:
         st.session_state.question_index = 0
     if "correct_answers" not in st.session_state:
@@ -91,36 +101,22 @@ def main():
     # Get the current question
     current_question = questions[st.session_state.question_index]
 
-    # Ask the current question
-    user_choice = ask_question(
-        current_question["question"],
-        current_question["choices"],
-        current_question["correct_answer"],
-        st.session_state.question_index,
-        st.session_state.correct_answers,
-    )
+    # Display the current question
+    st.write(current_question["question"])
+    user_choice = st.radio("Choose an answer:", current_question["choices"], key=f"question_{st.session_state.question_index}")
 
-    # Update the cylinder after the user selects an answer
+    # Proceed to the next question when the "Next" button is pressed
     if st.button("Next"):
-        # Check the answer and update the score
+        # Check if the user's choice is correct
         if user_choice == current_question["correct_answer"]:
             st.session_state.correct_answers += 1
-            st.success("Correct!")
-        else:
-            st.error(f"Incorrect! The correct answer was: {current_question['correct_answer']}")
 
-        # Update the cylinder fill based on the current score
-        current_fill_height = (
-            st.session_state.correct_answers / len(questions)
-        ) * 4  # Fill height proportional to the score
-        display_cylinder(current_fill_height)
-
-        # Move to the next question or display the final message
+        # Move to the next question
         if st.session_state.question_index < len(questions) - 1:
             st.session_state.question_index += 1
         else:
+            # Display the final message and animate the cylinder
             final_message(st.session_state.correct_answers, len(questions))
 
-# Run the app
 if __name__ == "__main__":
     main()
