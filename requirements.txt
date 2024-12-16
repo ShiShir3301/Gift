@@ -1,3 +1,2 @@
-streamlit
-time
+streamlit==1.41.1
 random
