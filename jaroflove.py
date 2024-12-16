@@ -19,7 +19,7 @@ def animate_cylinder(correct_answers, total_questions):
     fill_height = (correct_answers / total_questions) * cylinder_height  # Calculate fill height
 
     # Create a figure and axis for the cylinder
-    fig, ax = plt.subplots(figsize=(6, 8))
+    fig, ax = plt.subplots(figsize=(2, 4))
 
     # Draw the cylinder (as a rectangle)
     ax.add_patch(patches.Rectangle((0, 0), cylinder_width, cylinder_height, linewidth=2, edgecolor='black', facecolor='lightgray'))
